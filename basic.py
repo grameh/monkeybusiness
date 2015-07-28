@@ -45,11 +45,42 @@ def toggle_with_delay(vagrant_instance, node_name, sleep_duration):
 #latency, loss, duplication, corruption, reorder
 @task
 def add_latency(vagrant_instance, node_name, mean, dev):
-    #first remove old netems
     with settings(host_string= vagrant_instance.user_hostname_port(vm_name=node_name),
                     key_filename = vagrant_instance.keyfile(vm_name=node_name),
                     disable_known_hosts = True):
         run(latency_command.format(mean,dev))
+
+@task
+def add_loss(vagrant_instance, node_name, percentage):
+    with settings(host_string= vagrant_instance.user_hostname_port(vm_name=node_name),
+                    key_filename = vagrant_instance.keyfile(vm_name=node_name),
+                    disable_known_hosts = True):
+        run(packet_loss_command.format(percentage))
+
+@task
+def add_duplication(vagrant_instance, node_name, percentage):
+    with settings(host_string= vagrant_instance.user_hostname_port(vm_name=node_name),
+                    key_filename = vagrant_instance.keyfile(vm_name=node_name),
+                    disable_known_hosts = True):
+        run(duplication_command.format(percentage))
+
+@task
+def add_corruption(vagrant_instance, node_name, percentage):
+    #first remove old netems
+    with settings(host_string= vagrant_instance.user_hostname_port(vm_name=node_name),
+                    key_filename = vagrant_instance.keyfile(vm_name=node_name),
+                    disable_known_hosts = True):
+        run(corruption_command.format(percentage))
+
+@task
+def add_reorder(vagrant_instance, node_name, delay, percentage, correlation):
+    #first remove old netems
+    with settings(host_string= vagrant_instance.user_hostname_port(vm_name=node_name),
+                    key_filename = vagrant_instance.keyfile(vm_name=node_name),
+                    disable_known_hosts = True):
+        run(reorder_command.format(delay, percentage, correlation))
+
+
 @task
 def clear_config(vagrant_instance, node_name):
     with settings(host_string= vagrant_instance.user_hostname_port(vm_name=node_name),
