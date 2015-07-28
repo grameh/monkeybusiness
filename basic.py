@@ -49,12 +49,13 @@ def add_latency(vagrant_instance, node_name, mean, dev):
     with settings(host_string= vagrant_instance.user_hostname_port(vm_name=node_name),
                     key_filename = vagrant_instance.keyfile(vm_name=node_name),
                     disable_known_hosts = True):
-        run(reset_command)
+        run(latency_command.format(mean,dev))
+@task
+def clear_config(vagrant_instance, node_name):
     with settings(host_string= vagrant_instance.user_hostname_port(vm_name=node_name),
                     key_filename = vagrant_instance.keyfile(vm_name=node_name),
                     disable_known_hosts = True):
-        run(latency_command.format(mean,dev))
-
+        run(reset_command)
 
 
 def main():
