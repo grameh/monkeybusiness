@@ -1,3 +1,3 @@
 *.pyc
-monkey_env/
+monkey_venv/
 .vagrant
