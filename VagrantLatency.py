@@ -1,10 +1,11 @@
 from fabric.api import *
 import vagrant
 import utils
+from AbstractLatency import AbstractLatency
 
 class VagrantLatency(AbstractLatency):
-    def __init__(self, vagrant_file_path):
-        self.vagrant_instance = vagrant.Vagrant(VAGRANT_FILE)
+    def __init__(self, vagrant_file_path=None):
+        self.vagrant_instance = vagrant.Vagrant(vagrant_file_path)
 
     @task
     def add_latency(self, node_name, target_interface, mean, dev):
@@ -43,3 +44,9 @@ class VagrantLatency(AbstractLatency):
                         disable_known_hosts = True):
                 run(utils.corruption_command.format(target_interface, percentage_corrupt))
 
+    @task
+    def clear_config(self, node_name, target_interface):
+        with settings(host_string= self.vagrant_instance.user_hostname_port(vm_name=node_name),
+                        key_filename = self.vagrant_instance.keyfile(vm_name=node_name),
+                        disable_known_hosts = True):
+                run(utils.reset_command.format(target_interface))
